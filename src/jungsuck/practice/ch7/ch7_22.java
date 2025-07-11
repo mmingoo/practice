@@ -2,7 +2,7 @@ package jungsuck.practice.ch7;
 
 public class ch7_22 {
 
-    static double sumArea(Shape[] arr){
+    public static double sumArea(Shape[] arr){
         double sum = 0;
         for (int i = 0; i < arr.length ; i++) {
             sum+=arr[i].calcArea();
@@ -15,15 +15,15 @@ public class ch7_22 {
         System.out.println("면적의 합 :"+sumArea(arr));
     }
 
+
+
 }
 
 
 
 
 class Circle extends Shape{
-
     double r;
-
 
     Circle(double r){
         this(new Point(0,0), r);
@@ -37,7 +37,6 @@ class Circle extends Shape{
     double calcArea(){
         return Math.PI*r*r;
     }
-
 }
 
 class Rectangle extends Shape{
