@@ -24,15 +24,20 @@ public class ch7_22 {
 
 class Circle extends Shape{
     double r;
+//
+//    Circle(double r){
+//        this(new Point(0,0), r);
+//    }
 
+//    Circle(Point p, double r){
+//        super(p);
+//        this.r = r;
+//    }
     Circle(double r){
-        this(new Point(0,0), r);
-    }
-
-    Circle(Point p, double r){
-        super(p);
+        super();
         this.r = r;
     }
+
 
     double calcArea(){
         return Math.PI*r*r;
@@ -43,16 +48,21 @@ class Rectangle extends Shape{
     double width;
     double height;
 
-    Rectangle(double width, double height){
-        this(new Point(0,0), width,height);
-    }
+//    Rectangle(double width, double height){
+//        this(new Point(0,0), width,height);
+//    }
+//
+//    Rectangle(Point p,double width,double height){
+//        super(p);
+//        this.width = width;
+//        this.height = height;
+//    }
 
-    Rectangle(Point p,double width,double height){
-        super(p);
+    Rectangle(double width,double height){
+        super();
         this.width = width;
         this.height = height;
     }
-
     boolean isSquare(double width, double height){
         return width*height!=0 && width==height;
     }
