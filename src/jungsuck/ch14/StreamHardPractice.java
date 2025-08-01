@@ -1,14 +1,17 @@
 package jungsuck.ch14;
 
+import javax.swing.*;
 import java.security.cert.CertPath;
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class StreamHardPractice {
     public static void main(String[] args) {
+
+
+
         // 테스트 데이터 생성
         List<Employee> employees = Arrays.asList(
                 new Employee("김철수", "개발", 5000, LocalDate.of(2020, 3, 15),
@@ -31,15 +34,23 @@ public class StreamHardPractice {
         // 연습 1: 부서별 평균 연봉 구하기
         System.out.println("1. 부서별 평균 연봉:");
         // 여기에 코드 작성
-        Map<String, Double> employeeGroupAvgSalary = employees.stream()
+        Map<String, Double> averageDept = employees.stream()
                         .collect(Collectors.groupingBy(Employee::getDepartment, Collectors.averagingInt(Employee::getSalary)));
-        employeeGroupAvgSalary.forEach((dept,avg) -> System.out.println("부서 : " +dept+ "/ 평균 급여 : " +avg));
+        averageDept.forEach((dep, avgSalary) -> System.out.println("부서 : " +dep + ", 평균 임금 : "+avgSalary ));
 
         System.out.println();
 
         // 연습 2: 연봉이 5000 이상인 개발자들의 이름을 연봉 내림차순으로 정렬
         System.out.println("2. 고연봉 개발자들 (연봉순):");
+        employees.stream()
+                .filter(employee ->  employee.getDepartment().equals("개발"))
+//                  메서드 참조는 함수 객체이므로 직접 값과 비교할 수 없음
+//                .filter((Employee::getDepartment).equals("개발"))
+                        .filter(employee -> employee.getSalary() >= 5000)
+//                                .sorted(Comparator.comparing((Employee employee) -> employee.getSalary()).reversed())
+                                .sorted(Comparator.comparing(Employee::getSalary).reversed().thenComparing(Employee::getDepartment))
 
+                                        .forEach(employee -> System.out.println(employee.getName() + "의 연봉 :  " + employee.getSalary()));
 
 
         // 여기에 코드 작성
@@ -48,6 +59,17 @@ public class StreamHardPractice {
 
         // 연습 3: 각 부서에서 가장 높은 연봉을 받는 사람 찾기
         System.out.println("3. 부서별 최고 연봉자:");
+        Map<String, Optional<Employee>> deptByEmployee = employees.stream()
+                .collect(Collectors.groupingBy(Employee::getDepartment, Collectors.maxBy(Comparator.comparing(Employee::getSalary))));
+
+
+        deptByEmployee.forEach((dept, employee) -> {
+            if (employee.isPresent()) {
+                Employee emp = employee.get();
+                System.out.println(dept + ": " + emp.getName() + " (" + emp.getSalary() + "원)");
+            }
+        });
+
         // 여기에 코드 작성
 
         System.out.println();
