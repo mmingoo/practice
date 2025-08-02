@@ -1,5 +1,6 @@
 package jungsuck.ch14;
 
+import javax.management.monitor.StringMonitor;
 import javax.swing.*;
 import java.security.cert.CertPath;
 import java.time.LocalDate;
@@ -33,6 +34,9 @@ public class StreamHardPractice {
 
         // 연습 1: 부서별 평균 연봉 구하기
         System.out.println("1. 부서별 평균 연봉:");
+        Map<String, Double> avgSalaryByDept = employees.stream()
+                .collect(Collectors.groupingBy(Employee::getDepartment, Collectors.averagingInt(Employee::getSalary)));
+
         // 여기에 코드 작성
         Map<String, Double> averageDept = employees.stream()
                         .collect(Collectors.groupingBy(Employee::getDepartment, Collectors.averagingInt(Employee::getSalary)));
@@ -41,7 +45,11 @@ public class StreamHardPractice {
         System.out.println();
 
         // 연습 2: 연봉이 5000 이상인 개발자들의 이름을 연봉 내림차순으로 정렬
+        // .collect 는 대표적인 종료 연산
+        //스트림은 일회용이라 결과를 저장하려면 collect 필요
         System.out.println("2. 고연봉 개발자들 (연봉순):");
+
+        // 여기에 코드 작성
         employees.stream()
                 .filter(employee ->  employee.getDepartment().equals("개발"))
 //                  메서드 참조는 함수 객체이므로 직접 값과 비교할 수 없음
@@ -77,13 +85,21 @@ public class StreamHardPractice {
         // 연습 4: 모든 직원들이 가진 스킬들을 중복 제거하고 알파벳순으로 정렬
         System.out.println("4. 전체 스킬 목록 (중복제거, 정렬):");
         // 여기에 코드 작성
+        employees.stream()
+                .flatMap(employee -> employee.getSkills().stream())
+                        .distinct()
+                                .sorted()
+                                        .forEach(System.out::println);
 
         System.out.println();
 
         // 연습 5: 2020년 이후 입사한 직원들 중에서 Java 스킬을 가진 사람들의 정보
         System.out.println("5. 2020년 이후 입사 + Java 스킬 보유자:");
         // 여기에 코드 작성
-
+        employees.stream()
+                        .filter(employee -> employee.getHireDate().getYear() >= 2020)
+                                .filter(employee -> employee.getSkills().contains("Java"))
+                                        .forEach(employee -> System.out.println("이름 : " + employee.getName()));
         System.out.println();
 
         // 연습 6: 부서별로 그룹화하되, 각 부서 내에서는 입사일 순으로 정렬된 직원 명단
