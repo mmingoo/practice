@@ -104,15 +104,56 @@ public class StreamHardPractice {
 
         // 연습 6: 부서별로 그룹화하되, 각 부서 내에서는 입사일 순으로 정렬된 직원 명단
         System.out.println("6. 부서별 직원 명단 (입사일순):");
+        employees.stream()
+                .sorted(Comparator.comparing((Employee::getHireDate)))
+                .collect(Collectors.groupingBy((Employee::getDepartment)))
+                        .forEach((s, employees1) ->
+                                employees1.forEach(employee ->
+                                        System.out.println("부서 : " + s + "/ 이름 :  " + employee.getName() + " /입사일 : " + employee.getHireDate())));
+
+
+
+        employees.stream()
+                .sorted(Comparator.comparing(Employee::getHireDate))  // 먼저 정렬
+                .collect(Collectors.groupingBy(Employee::getDepartment))  // 그룹화
+                .forEach((dept, empList) -> {
+                    System.out.println(dept + ": " + empList);
+                });
+
+
         // 여기에 코드 작성
 
         System.out.println();
 
         // 연습 7: 전체 연봉 총합과 직원 수, 평균 연봉을 한 번에 구하기
+        // 첫번째 풀이
         System.out.println("7. 연봉 통계:");
-        // 여기에 코드 작성
+        int sum = employees.stream()
+                .mapToInt(Employee::getSalary)
+                        .sum();
+
+        int cnt = employees.size();
+
+        OptionalDouble avg = employees.stream()
+                .mapToInt(Employee::getSalary)
+                        .average();
+
+        System.out.printf("총원 : %d , 전체 연봉 총합 : %d, 평균 연봉 : %.2f",
+                cnt, sum, avg.orElse(0.0));        // 여기에 코드 작성
 
         System.out.println();
+
+        // 두번째 풀이
+        System.out.println("7. 전체 통계:");
+        IntSummaryStatistics stats = employees.stream()
+                .mapToInt(Employee::getSalary)
+                .summaryStatistics();
+
+        System.out.printf("총원 : %d, 전체 연봉 총합 : %d, 평균 연봉 : %.2f%n",
+                stats.getCount(),
+                stats.getSum(),
+                stats.getAverage());
+
 
         // 보너스: 가장 복잡한 문제
         System.out.println("보너스. 부서별 스킬 분포 (각 부서에서 가장 많이 보유한 스킬 TOP 3):");
